@@ -25,7 +25,6 @@
  */
 
 #include "internal.h"
-
 #include "accountopt.h"
 #include "blist.h"
 #include "conversation.h"
@@ -60,6 +59,9 @@
 #include "f_user.h"
 #include "f_util.h"
 #include "f_gchat.h"
+#include <unistd.h>
+#include <errno.h>
+
 gint g_callid;
 
 static const char *fetion_list_icon(PurpleAccount * a, PurpleBuddy * b)
@@ -1662,7 +1664,14 @@ static PurplePluginProtocolInfo prpl_info = {
 	NULL,
 	fetion_send_attention,
 	fetion_attention_types,
-	NULL
+	sizeof(PurplePluginProtocolInfo), /* struct_size */
+	NULL,                           /* get_account_text_table */
+	NULL,                           /* initiate_media */
+	NULL,                           /* get_media_caps */
+	NULL,                           /* get_moods */
+	NULL,                           /* set_public_alias */
+	NULL                            /* get_public_alias */
+
 };
 
 static PurplePluginInfo info = {
@@ -1676,7 +1685,7 @@ static PurplePluginInfo info = {
 	PURPLE_PRIORITY_DEFAULT,			    /**< priority       */
 
 	"prpl-fetion",					  /**< id             */
-	"fetion",					  /**< name           */
+	"Fetion",					  /**< name           */
 	DISPLAY_VERSION,				  /**< version        */
 	N_("SIP-C 4.0 Protocol Plugin"),		 /**  summary        */
 	N_("The SIP-C 4.0 Protocol Plugin"),		 /**  description    */
@@ -1699,7 +1708,7 @@ static PurplePluginInfo info = {
 	NULL
 };
 
-static void _init_plugin(PurplePlugin * plugin)
+static void init_plugin(PurplePlugin * plugin)
 {
 	PurpleAccountUserSplit *split;
 	PurpleAccountOption *option;
@@ -1720,4 +1729,4 @@ static void _init_plugin(PurplePlugin * plugin)
 
 }
 
-PURPLE_INIT_PLUGIN(fetion, _init_plugin, info);
+PURPLE_INIT_PLUGIN(fetion, init_plugin, info);

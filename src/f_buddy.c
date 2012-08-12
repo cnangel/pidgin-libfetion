@@ -215,7 +215,7 @@ GetContactList_cb(struct fetion_account_data *sip, struct sipmsg *msg,
 		}
 
 		purple_blist_add_buddy(b, NULL, g, NULL);
-		purple_blist_alias_buddy(b, "轰炸自己");
+		purple_blist_alias_buddy(b, "自己");
 		bs = g_new0(struct fetion_buddy, 1);
 		bs->name = g_strdup(b->name);
 		g_hash_table_insert(sip->buddies, bs->name, bs);
@@ -240,7 +240,7 @@ gboolean GetContactList(struct fetion_account_data * sip)
 
 	if (sip->GetContactFlag == 1) {
 		purple_timeout_remove(sip->GetContactTimeOut);
-		sip->GetContactTimeOut = NULL;
+		sip->GetContactTimeOut = 0;
 		return TRUE;
 	}
         /* Plato Wu,2010/09/25: this method is deprecate in SIP-C/4.0*/

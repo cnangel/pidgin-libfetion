@@ -25,6 +25,7 @@
 #include "f_util.h"
 #include <openssl/rsa.h>
 #include <openssl/sha.h>
+#include <stdlib.h>
 
 extern gint g_callid;
 
@@ -299,7 +300,7 @@ unsigned char* strtohex(const char* in , int* len)
 	return out;
 }
 
-char* hextostr(const unsigned char* in , int len) 
+char* hextostr(unsigned char* in , int len) 
 {
 	char* res = (char*)malloc(len * 2 + 1);
 	int i = 0;
@@ -315,9 +316,10 @@ char* hextostr(const unsigned char* in , int len)
 		res[i] = toupper(res[i]);
 		i ++;
 	};
-        /* Plato Wu,2010/09/24: why dont's free it. */
-        free(in);
-        
+
+	/* Plato Wu,2010/09/24: why dont's free it. */
+	free(in);
+
 	return res;
 }
 
@@ -406,5 +408,5 @@ char* generate_response(const char* nouce , const char* userid
 	free(aeskey);
 	free(psd);
 	free(nonce);
-	return hextostr(out , ret);
+	return hextostr(out, ret);
 }

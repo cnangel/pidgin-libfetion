@@ -1,56 +1,40 @@
-EXTRA_DIST = \
-		Makefile.mingw
+# $Id: Makefile.am,v 1.0.0-0 2012/08/12 14:50:33 Cnangel Exp $
 
-pkgdir = $(libdir)/purple-$(PURPLE_MAJOR_VERSION)
+AUTOMAKE_OPTIONS						= foreign
+EXTRA_DIST								= @PACKAGE@.spec \
+										  .gitignore \
+										  Makefile.mingw \
+										  $(NULL)
 
-FETIONSOURCES = \
-	fetion.c \
-	fetion.h \
-	f_buddy.c  \
-	f_buddy.h  \
-	f_chat.c  \
-	f_chat.h  \
-	f_gchat.c \
-	f_gchat.h \
-	f_zone.c \
-	f_zone.h \
-	f_group.c  \
-	f_group.h  \
-	f_login.c  \
-	f_login.h  \
-	f_sysmsg.c \
-	f_sysmsg.h \
-       	f_portrait.c \
-       	f_portrait.h \
-       	f_user.c  \
-       	f_user.h  \
-	f_util.c  \
-	f_util.h  \
-	sipmsg.c \
-	sipmsg.h
+ACLOCAL_AMFLAGS							= -I m4
+SUBDIRS									= doc \
+										  src \
+										  $(NULL)
 
-AM_CFLAGS = $(st) 
+# define rpm build root
+RPMBUILDTOPDIR		= $(shell unset RPMBUILDTOPDIR; if [ -f ${HOME}/.rpmmacros ]; then export RPMBUILDTOPDIR=`grep _topdir ${HOME}/.rpmmacros|head -1|awk '{print $$2}'`; else if [ -z $(RDIR) ]; then export RPMBUILDTOPDIR=target; else export RPMBUILDTOPDIR=$(RDIR); fi; fi; echo $${RPMBUILDTOPDIR};)
+PROCESSOR = $(shell uname -p)
 
-libfetion_la_LDFLAGS = -module -avoid-version
+.PHONY: rpm doc
 
-if STATIC_MSN
+doc:
+	$(mkdir_p) @DOXYGEN_OUTPUT_DIR@
+	doxygen
+	sed -i -e "s/charset=iso-8859-1/charset=utf-8/g" $(top_builddir)/doc/doxygen/html/*.html
 
-st = -DPURPLE_STATIC_PRPL
-noinst_LIBRARIES = libfetion.a
-libfetion_a_SOURCES = $(FETIONSOURCES)
-libfetion_a_CFLAGS  = $(AM_CFLAGS)
+rpm: dist @PACKAGE@.spec
+	$(mkdir_p) ${RPMBUILDTOPDIR}/{BUILD,RPMS,SOURCES,SPECS,SRPMS,BUILDROOT}
+	$(RM) ${RPMBUILDTOPDIR}/SOURCES/$(distdir).tar.gz
+	$(RM) ${RPMBUILDTOPDIR}/SPECS/@PACKAGE@.spec
+	$(LN_S) `pwd`/$(distdir).tar.gz ${RPMBUILDTOPDIR}/SOURCES
+	$(LN_S) `pwd`/@PACKAGE@.spec ${RPMBUILDTOPDIR}/SPECS
+	rpmbuild -ba ${RPMBUILDTOPDIR}/SPECS/@PACKAGE@.spec $(OPTIONS)
+	cp -f ${RPMBUILDTOPDIR}/RPMS/${PROCESSOR}/@PACKAGE@*@VERSION@* ${RPMBUILDTOPDIR}
 
-else
 
-st =
-pkg_LTLIBRARIES   = libfetion.la
-libfetion_la_SOURCES = $(FETIONSOURCES)
-libfetion_la_LIBADD  = $(GLIB_LIBS)
+CLEANDIRS								= doc/doxygen
+CLEANFILES								= *~ *.log
 
-endif
+clean-local:
+	-test -z "$(CLEANDIRS)" || rm -rf $(CLEANDIRS)
 
-AM_CPPFLAGS = \
-	-I$(top_srcdir)/libpurple \
-	-I$(top_builddir)/libpurple \
-	$(GLIB_CFLAGS) \
-	$(DEBUG_CFLAGS)

@@ -39,8 +39,7 @@ SendMsgTimeout_cb(struct fetion_account_data *sip, struct sipmsg *msg,
 						  sip->gc->account);
 	if (conv) {
 		purple_conversation_write(conv, NULL,
-					  _
-					  ("Message may have not been sent,because of timeout! "),
+					  _("Message may have not been sent,because of timeout! "),
 					  PURPLE_MESSAGE_ERROR, time(NULL));
 		purple_conversation_write(conv, NULL, msg->body,
 					  PURPLE_MESSAGE_RAW, time(NULL));
@@ -130,38 +129,38 @@ process_incoming_invite(struct fetion_account_data *sip, struct sipmsg *msg)
 {
         /* Plato Wu,2010/09/29: update it for SIP/C 4.0 protocol*/
 #if 1
-        gchar *body, *hdr;
-        const char *auth, *to, *callid;
-        char* ipaddress = NULL;
+	gchar *body, *hdr;
+	const char *auth, *to, *callid;
+	char* ipaddress = NULL;
 	char* credential = NULL;
-        int port;
+	int port;
 	struct group_chat *g_chat;
 	struct fetion_buddy *buddy = NULL;
 
-        auth = g_strdup_printf(sipmsg_find_header(msg, "A"));
+	auth = g_strdup_printf(sipmsg_find_header(msg, "A"));
 	callid = sipmsg_find_header(msg, "I");
 	to = sipmsg_find_header(msg, "F");
 
-        sipmsg_remove_header(msg, "K");
-        sipmsg_remove_header(msg, "XI");
-        sipmsg_remove_header(msg, "AL");
-        sipmsg_remove_header(msg, "A");
-        purple_debug_info("plato:", "Received a conversation invitation");
-        send_sip_response(sip->gc, msg, 200, "OK", NULL);
+	sipmsg_remove_header(msg, "K");
+	sipmsg_remove_header(msg, "XI");
+	sipmsg_remove_header(msg, "AL");
+	sipmsg_remove_header(msg, "A");
+	purple_debug_info("plato:", "Received a conversation invitation");
+	send_sip_response(sip->gc, msg, 200, "OK", NULL);
 
-        fetion_sip_get_auth_attr(auth , &ipaddress , &port , &credential);
-        purple_debug_info("plato:", "ipaddress is %s, port is %d, credential is %s", ipaddress, port, credential);
-        /* Plato Wu,2010/09/29: TODO Openfetion new a TCP connection here, but I don't
-         * know how to do in pidgin.*/
-        /* purple_proxy_connect(sip->gc, sip->account, ipaddress, port, invite_cb, sip->gc); */
-        /* Plato Wu,2010/09/29: TODO, R command should be sent into new connection. */
-       /* hdr = g_strdup_printf("A: TICKS auth=\"%s\"\r\nK: text/html-fragment\r\n" */
-       /*                       "K: multiparty\r\nK: nudge\r\n", credential); */
+	fetion_sip_get_auth_attr(auth , &ipaddress , &port , &credential);
+	purple_debug_info("plato:", "ipaddress is %s, port is %d, credential is %s", ipaddress, port, credential);
+	/* Plato Wu,2010/09/29: TODO Openfetion new a TCP connection here, but I don't
+	 * know how to do in pidgin.*/
+	/* purple_proxy_connect(sip->gc, sip->account, ipaddress, port, invite_cb, sip->gc); */
+	/* Plato Wu,2010/09/29: TODO, R command should be sent into new connection. */
+	/* hdr = g_strdup_printf("A: TICKS auth=\"%s\"\r\nK: text/html-fragment\r\n" */
+	/*                       "K: multiparty\r\nK: nudge\r\n", credential); */
 
-       /* send_sip_request(sip->gc, "R", "", "", hdr, body, NULL, NULL); */
+	/* send_sip_request(sip->gc, "R", "", "", hdr, body, NULL, NULL); */
 
-       /* purple_debug_info("plato:", "start free"); */
-       
+	/* purple_debug_info("plato:", "start free"); */
+
 	if (strncmp(to, "sip:TG", 6) != 0) {
 		buddy = g_hash_table_lookup(sip->buddies, to);
 		if (buddy == NULL) {
@@ -183,22 +182,18 @@ process_incoming_invite(struct fetion_account_data *sip, struct sipmsg *msg)
 		sip->tempgroup_id = g_list_append(sip->tempgroup_id, g_chat);
 
 		g_chat->conv =
-		    serv_got_joined_chat(sip->gc, g_chat->chatid,
-					 "Fetion Chat");
+			serv_got_joined_chat(sip->gc, g_chat->chatid,
+					"Fetion Chat");
 		purple_conv_chat_add_user(PURPLE_CONV_CHAT(g_chat->conv),
-					  purple_account_get_alias
-					  (sip->account), NULL,
-					  PURPLE_CBFLAGS_NONE, TRUE);
+				purple_account_get_alias
+				(sip->account), NULL,
+				PURPLE_CBFLAGS_NONE, TRUE);
 	}
 
-
-       free(ipaddress); free(credential); g_free(auth);
-       g_free(hdr);
-
-
-
-
-
+	free(ipaddress);
+	free(credential);
+	free((char *)auth);
+	g_free(hdr);
 
 #else
 	const gchar *to, *callid;

@@ -11,6 +11,7 @@
 #
 .*
 *.o
+*.lo
 *.o.*
 *.a
 *.s
@@ -27,6 +28,9 @@
 *.gz
 .libs/*
 .deps/*
+*.bak
+*.la
+*.loT
 
 #
 # Top-level generic files
@@ -43,17 +47,10 @@ Module.symvers
 #
 # Generated include files
 #
-include/asm
-include/asm-*/asm-offsets.h
-include/config
-include/linux/autoconf.h
-include/linux/compile.h
-include/linux/version.h
-include/linux/utsrelease.h
-include/linux/bounds.h
 
 # stgit generated dirs
 patches-*
+*.patch
 
 # quilt's files
 patches
@@ -66,3 +63,22 @@ ncscope.*
 *.orig
 *~
 \#*#
+aclocal.m4
+autom4te.cache/
+compile
+config.guess
+config.h.in
+config.sub
+configure
+depcomp
+Makefile.in
+install-sh
+ltmain.sh
+m4/
+missing
+Makefile
+config.h
+config.log
+config.status
+libtool
+stamp-h1

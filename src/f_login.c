@@ -311,7 +311,7 @@ gint ParseCfg(struct fetion_account_data *sip)
 		return -1;
 	son_node = xmlnode_get_child(root, "servers");
 	g_return_val_if_fail(son_node != NULL, -2);
-	server_ver = xmlnode_get_attrib(son_node, "version");
+	server_ver = (gchar *)xmlnode_get_attrib(son_node, "version");
 	sip->ServerVersion = g_strdup(server_ver);
 	purple_debug_info("fetion", "systemconfig:cfg_ver[%s]\n",
 			  sip->ServerVersion);

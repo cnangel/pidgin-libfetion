@@ -48,7 +48,7 @@ void CreateTempGroup(PurpleConnection * gc, PurpleBuddy * buddy)
 	purple_debug(PURPLE_DEBUG_MISC, "fetion", "in CreateTempGroup[%s]\n",
 		     body);
 	send_sip_request(sip->gc, "S", "", "", hdr, body, NULL,
-			 CreateTempGroup_cb);
+			 *(TransCallback *)(&CreateTempGroup_cb));
 
 	g_free(body);
 	g_free(hdr);

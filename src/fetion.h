@@ -25,7 +25,7 @@
 
 #include <glib.h>
 #include <time.h>
-
+#include <netinet/in.h>
 #include "cipher.h"
 #include "circbuffer.h"
 #include "dnsquery.h"

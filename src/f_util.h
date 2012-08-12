@@ -31,6 +31,6 @@ char* generate_aes_key();
 char* generate_response(const char* nouce , const char* userid, 
                         const char* password , const char* publickey , const char* key);
 unsigned char* strtohex(const char* in , int* len);
-char* hextostr(const unsigned char* in , int len);
+char* hextostr(unsigned char* in , int len);
 
 #endif

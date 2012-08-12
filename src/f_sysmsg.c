@@ -154,7 +154,7 @@ void process_incoming_BN(struct fetion_account_data *sip, struct sipmsg *msg)
                         
                                 g_free(buddy_name);
                                 purple_blist_add_buddy(b, NULL, g, NULL);
-                                purple_blist_alias_buddy(b, "轰炸自己");
+                                purple_blist_alias_buddy(b, "自己");
                                 bs = g_new0(struct fetion_buddy, 1);
                                 bs->name = g_strdup(b->name);
                                 g_hash_table_insert(sip->buddies, bs->name, bs);
