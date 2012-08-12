@@ -1,241 +1,135 @@
-/**
- * @file fetion.h
- *
- * purple
- *
- * Copyright (C) 2005, Thomas Butter <butter@uni-mannheim.de>
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02111-1301  USA
- */
+/***************************************************************************
+ *   Copyright (C) 2010 by lwp                                             *
+ *   levin108@gmail.com                                                    *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   51 Franklin Street, Suite 500, Boston, MA 02110-1335, USA.            *
+ *                                                                         *
+ *   OpenSSL linking exception                                             *
+ *   --------------------------                                            *
+ *   If you modify this Program, or any covered work, by linking or        *
+ *   combining it with the OpenSSL project's "OpenSSL" library (or a       *
+ *   modified version of that library), containing parts covered by        *
+ *   the terms of OpenSSL/SSLeay license, the licensors of this            *
+ *   Program grant you additional permission to convey the resulting       *
+ *   work. Corresponding Source for a non-source form of such a            *
+ *   combination shall include the source code for the parts of the        *
+ *   OpenSSL library used as well as that of the covered work.             *
+ ***************************************************************************/
 
-#ifndef _PURPLE_FETION_H
-#define _PURPLE_FETION_H
+#ifndef FETION_H
+#define FETION_H
 
-#include <glib.h>
-#include <time.h>
+#ifdef __cplusplus
+extern "C" {
+#endif
+#include <fcntl.h>
+#include <sys/ioctl.h>
+#include <sys/types.h>
+#include <sys/socket.h>
 #include <netinet/in.h>
-#include "cipher.h"
-#include "circbuffer.h"
-#include "dnsquery.h"
-#include "dnssrv.h"
-#include "network.h"
-#include "proxy.h"
-#include "prpl.h"
-#include "internal.h"
+#include <netinet/tcp.h>
+#include <arpa/inet.h>
+#include <net/if.h>
+#include <sys/socket.h>
+#include <netdb.h>
 
-#include "accountopt.h"
+#include <stdint.h>
+#include <string.h>
+#include <stdarg.h>
+#include <ctype.h>
+#include <unistd.h>
+#define _XOPEN_SOURCE
+#include <assert.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <dirent.h>
+#include <sys/stat.h>
+#include <libxml/parser.h>
+#include <pthread.h>
+#include <openssl/crypto.h>
+#include <openssl/ssl.h>
+#include <openssl/err.h>
+#include <openssl/rand.h>
+
+#include "glib/gi18n.h"
 #include "blist.h"
-#include "conversation.h"
 #include "debug.h"
-#include "notify.h"
-#include "prpl.h"
-#include "plugin.h"
-#include "util.h"
-#include "version.h"
-#include "sipmsg.h"
+#include "account.h"
+#include "request.h"
 
-#define FETION_BUF_INC 4096
-#define FETION_REGISTER_RETRY_MAX 2
-
-#define FETION_REGISTER_SENT 1
-#define FETION_REGISTER_RETRY 2
-#define FETION_REGISTER_COMPLETE 3
-
-#define PUBLISH_EXPIRATION 600
-#define SUBSCRIBE_EXPIRATION 1200
+#ifdef UNUSED
+#elif defined(__GNUC__)
+# 	define UNUSED(x) UNUSED_ ## x __attribute__((unused))
+#else
+#	define UNUSED(x) x
+#endif
 
 #define PROTO_VERSION "4.0.2510"
+#define LOGIN_TYPE_FETIONNO    			1
+#define LOGIN_TYPE_MOBILENO    			0
+#define BOUND_MOBILE_ENABLE    			1
+#define BOUND_MOBILE_DISABLE   			0
+#define BASIC_SERVICE_NORMAL   			1
+#define BASIC_SERVICE_ABNORMAL 			0
+#define CARRIER_STATUS_OFFLINE			-1
+#define CARRIER_STATUS_NORMAL  			0
+#define CARRIER_STATUS_DOWN    			1
+#define CARRIER_STATUS_CLOSED           2 
+#define RELATION_STATUS_AUTHENTICATED   1
+#define RELATION_STATUS_UNAUTHENTICATED 0
 
-struct sip_dialog {
-	gchar *ourtag;
-	gchar *theirtag;
-	gchar *callid;
-};
 
-struct fetion_watcher {
-	gchar *name;
-	time_t expire;
-	struct sip_dialog dialog;
-	gboolean needsxpidf;
-};
+#define NAV_SERVER "nav.fetion.com.cn"
+#define SSI_SERVER "uid.fetion.com.cn"
 
-struct fetion_buddy {
-	gchar *name;
-	gchar *icon_buf;
-	gchar *icon_crc;
-	gchar *host;
-	// The url (without host) of the portrait returned by the server
-	// Fixme: when to free it
-	gchar *portrait_url;
+#define FETION_NUDGE 0
+	
+#define BUFLEN 4096
 
-	gint icon_size;
-	gint icon_rcv_len;
-	gint inpa;
-	struct fetion_account_data *sip;
+#include "fx_types.h"
 
-	time_t resubscribe;
-	struct sip_dialog *dialog;
-};
 
-struct fetion_cfg {
-	PurpleProxyConnectData *conn;
-	gchar *buf;
-	gint size;
-	gint rcv_len;
-	gint inpa;
-};
+gint push_cb(gpointer data, gint source, const gchar *error_message);
 
-struct sip_auth {
-	int type;		/* 1 = Digest / 2 = NTLM */
-	gchar *nonce;
-	gchar *cnonce;
-	gchar *domain;
-	gchar *target;
-	guint32 flags;
-	int nc;
-	gchar *digest_session_key;
-	int retries;
-};
+xmlNodePtr xml_goto_node(xmlNodePtr node , const gchar *xml);
+gchar *xml_convert(xmlChar* in);
+struct transaction *transaction_new();
+const gchar *get_status_id(gint state);
+void transaction_free(struct transaction *trans);
+void transaction_set_callid(struct transaction *trans, gint callid);
+void transaction_set_userid(struct transaction *trans, const gchar *userid);
+void transaction_set_callback(struct transaction *trans, TransCallback callback);
+void transaction_set_timeout(struct transaction *trans, GSourceFunc timeout, gpointer data);
+void transaction_set_msg(struct transaction *trans, const gchar *msg);
+void transaction_wait(fetion_account *ses, struct transaction *trans);
+void transaction_wakeup(fetion_account *ses, struct transaction *trans);
+void transaction_add(fetion_account *ses, struct transaction *trans);
+void transaction_remove(fetion_account *ses, struct transaction *trans);
+fetion_account *session_new(PurpleAccount *account);
+fetion_account *session_clone(fetion_account *ac);
+void session_set_userid(fetion_account *ses, const gchar *userid);
+void session_add(fetion_account *ac);
+fetion_account *session_find(const gchar *key);
+fetion_account *session_find_by_sk(gint sk);
+void session_remove(fetion_account *ses);
+void session_destroy(fetion_account *ses);
 
-struct group_chat {
-	gint chatid;
-	gchar *callid;
-	gchar *groupname;
-	PurpleConversation *conv;
-};
+#ifdef __cplusplus
+}
+#endif
 
-struct group_attr {
-	gchar *name;
-	gchar *id;
-};
-
-struct fetion_account_data {
-	PurpleConnection *gc;
-	gchar *servername;
-	gchar *username;
-	gchar *mobileno;
-	gchar *password;
-	gchar *uri;
-        /* Plato Wu,2010/09/27: SIP/C-4.0 use it through all protocol, like password encryption and 
-           presence message */
-        gchar *uid;
-	gchar *impresa;
-	gchar *ssic;
-	gchar *SsicServer;
-	gchar *SysCfgServer;
-	gchar *UploadServer;
-	gchar *UploadPrefix;
-	gchar *MsgServer;
-	gchar *PortraitServer;
-	gchar *PortraitPrefix;
-	gchar *ServerVersion;
-	gchar *ServiceNoVersion;
-	gchar *ParaVersion;
-	gchar *HintsVersion;
-	gchar *HttpAppVersion;
-	gchar *ClientCfgVersion;
-	gchar *CfgVersion;
-	PurpleDnsQueryData *query_data;
-	PurpleSrvQueryData *srv_query_data;
-	PurpleNetworkListenData *listen_data;
-	int MsgPort;
-	//int SysCfg_inpa;
-	int fd;
-	int cseq;
-	int tg;			//for temp group chat id
-	time_t reregister;
-	time_t republish;
-	int registerstatus;	/* 0 nothing, 1 first registration send, 2 auth received, 3 registered */
-	struct fetion_cfg SysCfg;
-	struct sip_auth registrar;
-	struct sip_auth proxy;
-	int listenfd;
-	int listenport;
-	int listenpa;
-	gchar *status;
-	GHashTable *buddies;
-	GHashTable *group;
-	GHashTable *group2id;
-	GHashTable *tempgroup;
-	GHashTable *portrait_con;
-        /* Plato Wu,2010/09/27: SIP-C/4.0 use uid as index, but fetion plugin use uri, so need
-         * this table*/
-        GHashTable *uri2uid;
-	GList *tempgroup_id;
-	guint registertimeout;
-	guint resendtimeout;
-	gboolean connecting;
-	PurpleAccount *account;
-	PurpleCircBuffer *txbuf;
-	guint tx_handler;
-	gchar *regcallid;
-	GSList *transactions;
-	GSList *watcher;
-	GSList *openconns;
-	gboolean udp;
-	struct sockaddr_in serveraddr;
-	int registerexpire;
-	gchar *realhostname;
-	int realport;		/* port and hostname from SRV record */
-	PurpleStoredImage *icon;
-	struct fetion_buddy *who;	/* log the user we are dowdloading portrait */
-	guint icon_handler;
-	PurpleCircBuffer *icon_buf;
-	guint GetContactTimeOut;
-	guint GetContactFlag;
-};
-
-struct sip_connection {
-	int fd;
-	gchar *inbuf;
-	int inbuflen;
-	int inbufused;
-	int inputhandler;
-};
-
-struct transaction;
-
-typedef gboolean(*TransCallback) (struct fetion_account_data *,
-				  struct sipmsg *, struct transaction *);
-
-struct transaction {
-	time_t time;
-	int timer;
-	int retries;
-	int transport;		/* 0 = tcp, 1 = udp */
-	int fd;
-	const gchar *cseq;
-	struct sipmsg *msg;
-	struct fetion_account_data *sip;
-	TransCallback callback;
-};
-
-void fetion_input_cb(gpointer data, gint source, PurpleInputCondition cond);
-gchar *find_tag(const gchar * hdr);
-void send_sip_request(PurpleConnection * gc, const gchar * method,
-		      const gchar * url, const gchar * to,
-		      const gchar * addheaders, const gchar * body,
-		      struct sip_dialog *dialog, TransCallback tc);
-
-void send_sip_response(PurpleConnection * gc, struct sipmsg *msg, int code,
-		       const char *text, const char *body);
-gboolean process_subscribe_response(struct fetion_account_data *sip,
-				    struct sipmsg *msg, struct transaction *tc);
-gboolean process_register_response(struct fetion_account_data *sip,
-				   struct sipmsg *msg, struct transaction *tc);
-guint fetion_ht_hash_nick(const char *nick);
-gboolean fetion_ht_equals_nick(const char *nick1, const char *nick2);
-void srvresolved(gpointer data);
-#endif				/* _PURPLE_FETION_H */
+#endif

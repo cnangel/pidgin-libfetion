@@ -5,35 +5,31 @@ AUTOMAKE_OPTIONS						= foreign
 AM_CFLAGS								= $(st)
 
 AM_CPPFLAGS								= -DDISPLAY_VERSION='"@PACKAGE_VERSION@"' \
+										  -DRES_DIR='"$(datadir)/purple/@PACKAGE_NAME@/"' \
 										  $(PURPLE_CFLAGS) \
+										  $(XML2_CFLAGS) \
+										  $(OPENSSL_CFLAGS) \
 										  $(NULL)
 
 # {{{ /* fetion_src_files 				= */
-fetion_src_files						= f_buddy.c \
-                                          f_buddy.h \
-                                          f_chat.c \
-                                          f_chat.h \
-                                          fetion.c \
-                                          fetion.h \
-                                          f_gchat.c \
-                                          f_gchat.h \
-                                          f_group.c \
-                                          f_group.h \
-                                          f_login.c \
-                                          f_login.h \
-                                          f_portrait.c \
-                                          f_portrait.h \
-                                          f_sysmsg.c \
-                                          f_sysmsg.h \
-                                          f_user.c \
-                                          f_user.h \
-                                          f_util.c \
-                                          f_util.h \
-                                          f_zone.c \
-                                          f_zone.h \
-                                          internal.h \
-                                          sipmsg.c \
-                                          sipmsg.h \
+fetion_src_files						= fetion.h \
+                                          fx_blist.c \
+                                          fx_blist.h \
+                                          fx_buddy.c \
+                                          fx_buddy.h \
+                                          fx_chat.c \
+                                          fx_chat.h \
+                                          fx_contact.c \
+                                          fx_contact.h \
+                                          fx_login.c \
+                                          fx_login.h \
+                                          fx_sip.c \
+                                          fx_sip.h \
+                                          fx_types.h \
+                                          fx_user.c \
+                                          fx_user.h \
+                                          fx_util.c \
+                                          openfetion.c \
 										  $(NULL)
 # }}}
 
@@ -54,7 +50,8 @@ pkg_LTLIBRARIES							= libfetion.la
 libfetion_la_SOURCES					= $(fetion_src_files)
 libfetion_la_LDFLAGS					= -module -avoid-version \
 										  $(PURPLE_LIBS) \
-										  -lssl \
+										  $(XML2_LIBS) \
+										  $(OPENSSL_LIBS) \
 										  $(NULL)
 endif
 

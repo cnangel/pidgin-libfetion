@@ -3,7 +3,7 @@
 
 AC_PREREQ([2.59])
 AC_INIT([pidgin-libfetion], [1.0.0], [https://github.com/cnangel/pidgin-libfetion])
-AC_CONFIG_SRCDIR([src/f_sysmsg.h])
+AC_CONFIG_SRCDIR([src/fetion.h])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE([1.9 tar-pax])
@@ -43,8 +43,13 @@ PKG_CHECK_MODULES([GLIB],[glib-2.0])
 PKG_CHECK_MODULES([PURPLE],[purple >= 2.7.0],,AC_MSG_ERROR([
 				   *** libpurple 2.0+ >=2.7.0 is required to build.]))
 
+PKG_CHECK_MODULES([XML2],[libxml-2.0 >= 2.6.0],,AC_MSG_ERROR([
+				   *** libxml-2.0 >= 2.6.0 is required to build.]))
+
+PKG_CHECK_MODULES([OPENSSL],[openssl >= 0.9.6],,AC_MSG_ERROR([
+				   *** openssl >= 0.9.6 is required to build.]))
+
 # Checks for libraries.
-AC_CHECK_LIB([ssl], [main])
 
 # Checks for header files.
 AC_CHECK_HEADERS([arpa/inet.h fcntl.h langinfo.h libintl.h locale.h netdb.h netinet/in.h stdlib.h string.h sys/socket.h sys/time.h unistd.h])
