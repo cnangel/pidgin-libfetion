@@ -4,10 +4,15 @@ AUTOMAKE_OPTIONS						= foreign
 EXTRA_DIST								= @PACKAGE@.spec \
 										  .gitignore \
 										  Makefile.mingw \
+										  Message.sh \
 										  $(NULL)
 
 ACLOCAL_AMFLAGS							= -I m4
 SUBDIRS									= doc \
+										  data \
+										  pixmaps/protocols/16 \
+										  pixmaps/protocols/22 \
+										  locale/po \
 										  src \
 										  $(NULL)
 

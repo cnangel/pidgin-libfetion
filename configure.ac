@@ -2,12 +2,12 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.59])
-AC_INIT([pidgin-libfetion], [1.0.0], [https://github.com/cnangel/pidgin-libfetion])
+AC_INIT([pidgin-libfetion], [1.1.0], [https://github.com/cnangel/pidgin-libfetion])
 AC_CONFIG_SRCDIR([src/fetion.h])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE([1.9 tar-pax])
-AM_INIT_AUTOMAKE([pidgin-libfetion], [1.0.0])
+AM_INIT_AUTOMAKE([pidgin-libfetion], [1.1.0])
 
 PACKAGE_RELEASE=1
 BITS=`if [[ 64 -eq $(getconf LONG_BIT) ]]; then echo -n $(getconf LONG_BIT); fi`
@@ -52,20 +52,25 @@ PKG_CHECK_MODULES([OPENSSL],[openssl >= 0.9.6],,AC_MSG_ERROR([
 # Checks for libraries.
 
 # Checks for header files.
-AC_CHECK_HEADERS([arpa/inet.h fcntl.h langinfo.h libintl.h locale.h netdb.h netinet/in.h stdlib.h string.h sys/socket.h sys/time.h unistd.h])
+AC_CHECK_HEADERS([arpa/inet.h fcntl.h locale.h netdb.h netinet/in.h stdint.h stdlib.h string.h sys/ioctl.h sys/socket.h unistd.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
-AC_TYPE_SIZE_T
+AC_C_INLINE
 
 # Checks for library functions.
 AC_FUNC_MALLOC
-AC_CHECK_FUNCS([memmove memset strchr strstr strtol])
+AC_FUNC_REALLOC
+AC_CHECK_FUNCS([memmove memset setlocale strstr strtol])
 
 AM_CONDITIONAL([STATIC_FETION],[false])
 
 AC_CONFIG_FILES([Doxyfile
 				 Makefile
+                 data/Makefile
                  doc/Makefile
+                 locale/po/Makefile
 				 pidgin-libfetion.spec
+                 pixmaps/protocols/16/Makefile
+                 pixmaps/protocols/22/Makefile
                  src/Makefile])
 AC_OUTPUT

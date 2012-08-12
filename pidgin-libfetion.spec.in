@@ -35,3 +35,4 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 @pluginsdir@/libfetion.so
 %exclude @pluginsdir@/libfetion.la
+%{_datadir}

@@ -6,6 +6,9 @@ AM_CFLAGS								= $(st)
 
 AM_CPPFLAGS								= -DDISPLAY_VERSION='"@PACKAGE_VERSION@"' \
 										  -DRES_DIR='"$(datadir)/purple/@PACKAGE_NAME@/"' \
+										  -DGETTEXT_PACKAGE='"@PACKAGE_NAME@"' \
+										  -DLOCALE_DIR='"$(datadir)/purple/@PACKAGE_NAME@/mo/"' \
+										  -DENABLE_NLS \
 										  $(PURPLE_CFLAGS) \
 										  $(XML2_CFLAGS) \
 										  $(OPENSSL_CFLAGS) \

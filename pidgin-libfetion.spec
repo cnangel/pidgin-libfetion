@@ -2,7 +2,7 @@
 %define debug_package %{nil}
 
 Name:           pidgin-libfetion
-Version:        1.0.0
+Version:        1.1.0
 Release:        1%{?dist}
 Summary:        The fetion plugin for pidgin 
 
@@ -35,3 +35,4 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 /usr/lib/purple-2/libfetion.so
 %exclude /usr/lib/purple-2/libfetion.la
+%{_datadir}

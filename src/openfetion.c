@@ -29,16 +29,12 @@
  *   OpenSSL library used as well as that of the covered work.             *
  ***************************************************************************/
 
-#define PURPLE_PLUGINS
-
 #include <glib.h>
-
 #include "fetion.h"
 #include "notify.h"
 #include "plugin.h"
 #include "version.h"
 #include "accountopt.h"
-
 #include "fx_sip.h"
 #include "fx_user.h"
 #include "fx_login.h"
@@ -66,7 +62,7 @@ static void process_notify_cb(fetion_account *ac, const gchar *sipmsg);
 
 static const char *fx_list_icon(PurpleAccount *UNUSED(a), PurpleBuddy *UNUSED(b))
 {
-	return "openfetion";
+	return "fetion";
 }
 
 
@@ -861,9 +857,9 @@ static PurplePluginInfo info = {
     NULL,
     PURPLE_PRIORITY_DEFAULT,
 
-    "Openfetion",
-    "Openfetion",
-    "1.1",
+    "prpl-fetion",
+    "Fetion",
+    DISPLAY_VERSION,
 
     N_("Fetion Plugin"),
     N_("libpurple plugin implementing Fetion Protocol version 4"),
