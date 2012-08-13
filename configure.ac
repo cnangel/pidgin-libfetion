@@ -70,7 +70,6 @@ AC_CONFIG_FILES([Doxyfile
                  doc/Makefile
                  locale/po/Makefile
 				 pidgin-libfetion.spec
-                 pixmaps/protocols/16/Makefile
-                 pixmaps/protocols/22/Makefile
+                 pixmaps/Makefile
                  src/Makefile])
 AC_OUTPUT

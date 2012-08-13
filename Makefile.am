@@ -10,8 +10,7 @@ EXTRA_DIST								= @PACKAGE@.spec \
 ACLOCAL_AMFLAGS							= -I m4
 SUBDIRS									= doc \
 										  data \
-										  pixmaps/protocols/16 \
-										  pixmaps/protocols/22 \
+										  pixmaps \
 										  locale/po \
 										  src \
 										  $(NULL)

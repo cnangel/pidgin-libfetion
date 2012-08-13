@@ -15,7 +15,7 @@ BuildRequires:  libpurple-devel
 
 
 %description	
-pidgin-fetion is a pidgin plugin, you can send sms for your friend.
+%{name} is a pidgin plugin, you can send sms for your friend.
 
 %prep 
 %setup -q
